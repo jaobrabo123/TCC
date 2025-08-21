@@ -35,7 +35,16 @@ class ExperienciaController {
             const experiencias = await ExperienciaModel.buscarTodasExperiencias();
             res.status(200).json(experiencias);
         } catch (erro) {
-            res.status(500).json({ error: `Erro ao buscar todas as experiências: ${ erro?.message || "erro desconhecido" }`});
+            res.status(500).json({ error: `Erro ao buscar todas as experiências: ${erro.message}`});
+        }
+    }
+
+    static async listarAlgunsPublic(req, res){
+        try {
+            const experiencias = await ExperienciaModel.buscarTodasExperienciasPublic();
+            res.status(200).json(experiencias);
+        } catch (erro) {
+            res.status(500).json({ error: `Erro ao buscar todas as experiências: ${erro.message}`});
         }
     }
 

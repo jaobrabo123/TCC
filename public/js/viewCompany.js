@@ -1,12 +1,19 @@
 // * Importando nossa instância do axios
 import axiosWe from './axiosConfig.js';
 
-async function loadCandidatos(){
+function calculaIdade(nascimento){
+  return Math.floor(Math.ceil(Math.abs(nascimento.getTime() - new Date().getTime()) / (1000 * 3600 * 24)) / 365.25);
+}
+
+async function loadCandidatosInit(){
   try {
-    const response = await axiosWe('/candidatos/all/public');
-    const data = response.data;
-    data.forEach(cand => {
-      console.log(cand)
+    const [responseCand, responseExp] = await Promise.all([
+      axiosWe('/candidatos/all/public'),
+      axiosWe('/experiencias/all/public')
+    ]);
+    const dataCand = responseCand.data;
+    const dataExp = responseExp.data;
+    dataCand.forEach(cand => {
       const html = `
         <article class="empresa-card">
           <div class="card-header">
@@ -33,13 +40,31 @@ async function loadCandidatos(){
       `
       document.querySelector('.empresas-container').innerHTML += html;
     });
+    dataExp.forEach(exp => {
+      const html = `
+        <div class="swiper-slide">
+          <div class="slide-content">
+            <span class="slide-empresa">Engenheiro de Software</span>
+            <h3 class="slide-titulo">${exp.titulo}</h3>
+            <blockquote class="slide-texto">
+              "${exp.descricao}"
+            </blockquote>
+            <div class="slide-meta">
+              <span class="slide-autor">${exp.candidato_nome}, ${calculaIdade(new Date(exp.candidato_nasc))} anos</span>
+              <span class="slide-data">Disponibilidade: Imediata</span>
+            </div>
+          </div>
+        </div>
+      `;
+      document.querySelector('.swiper-wrapper').innerHTML += html;
+    })
   } catch (erro) {
     console.error(erro);
   }
 }
 
 window.addEventListener('DOMContentLoaded', async function () {
-  await loadCandidatos()
+  await loadCandidatosInit();
   // -------------- Menu Lateral --------------
   const menuBtn = document.getElementById('menu-toggle');
   const aside = document.querySelector('aside');

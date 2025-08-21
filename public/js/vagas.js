@@ -1,8 +1,11 @@
+// * Importando nossa instância do axios
+import axiosWe from './axiosConfig.js';
+
 async function loadEmpresas(){
   try {
-    
+     
   } catch (erro) {
-    
+    console.error(erro);
   }
 }
 

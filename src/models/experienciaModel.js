@@ -1,5 +1,5 @@
 // * Prisma
-const prisma = require('@config/db.js')
+const prisma = require('../config/db.js')
 
 class ExperienciaModel {
 
@@ -11,7 +11,7 @@ class ExperienciaModel {
             where: {
                 id
             }
-        })
+        });
         return resultado.candidato;
     }
 
@@ -52,8 +52,23 @@ class ExperienciaModel {
             descricao: exp.descricao,
             data_criacao: exp.data_criacao,
             email_candidato: exp.candidatos.email
-        }))
+        }));
         return resultadoEmailComAS;
+    }
+
+    static async buscarTodasExperienciasPublic(){
+        const resultado = await prisma.$queryRaw`
+            select e.titulo, e.descricao, 
+            e.imagem, c.nome as candidato_nome,
+            c.data_nasc as candidato_nasc
+            from experiencias e
+            join candidatos c
+            on e.candidato = c.id
+            where e.data_criacao > now() - interval '7 days'
+            order by random()
+            limit 4
+        `;
+        return resultado;
     }
 
 }
