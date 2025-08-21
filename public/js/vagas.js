@@ -1,3 +1,11 @@
+async function loadEmpresas(){
+  try {
+    
+  } catch (erro) {
+    
+  }
+}
+
 window.addEventListener('DOMContentLoaded', function () {
   // -------------- Menu Lateral --------------
   const menuBtn = document.getElementById('menu-toggle');

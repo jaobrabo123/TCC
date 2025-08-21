@@ -1,4 +1,45 @@
-window.addEventListener('DOMContentLoaded', function () {
+// * Importando nossa instância do axios
+import axiosWe from './axiosConfig.js';
+
+async function loadCandidatos(){
+  try {
+    const response = await axiosWe('/candidatos/all/public');
+    const data = response.data;
+    data.forEach(cand => {
+      console.log(cand)
+      const html = `
+        <article class="empresa-card">
+          <div class="card-header">
+            <img src="${cand.foto}" alt="Foto do candidato" class="empresa-logo">
+            <button class="favorite-btn" aria-label="Salvar candidato">
+              <i class='bx bx-star'></i>
+            </button>
+          </div>
+          <div class="card-body">
+            <h3 class="empresa-nome">${cand.nome}</h3>
+            <p class="empresa-descricao">${cand.descricao}</p>
+          </div>
+          <div class="card-footer">
+            <div class="card-meta">
+              <div class="tag-chips">
+                ${cand.tags[0]?`<span class="tag-chip">${cand.tags[0].nome}</span>`:''}
+                ${cand.tags[1]?`<span class="tag-chip">${cand.tags[1].nome}</span>`:''}
+                ${cand.tags[2]?`<span class="tag-chip">${cand.tags[2].nome}</span>`:''}
+              </div>
+            </div>
+            <button class="ver-mais-btn">Ver perfil</button>
+          </div>
+        </article>
+      `
+      document.querySelector('.empresas-container').innerHTML += html;
+    });
+  } catch (erro) {
+    console.error(erro);
+  }
+}
+
+window.addEventListener('DOMContentLoaded', async function () {
+  await loadCandidatos()
   // -------------- Menu Lateral --------------
   const menuBtn = document.getElementById('menu-toggle');
   const aside = document.querySelector('aside');

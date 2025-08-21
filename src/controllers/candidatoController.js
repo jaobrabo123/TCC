@@ -122,6 +122,19 @@ class CandidatoController {
         }
     }
 
+    static async listarTodosPublic(req, res){
+        try {
+            const reqPage = req.query.page;
+            const page = reqPage ? Number(reqPage) <= 0 ? 1 
+                : Number(reqPage) || 1
+                : 1;
+            const candidatos = await CandidatoModel.buscarCandidatosPublic(page);
+            res.status(200).json(candidatos);
+        } catch (erro) {
+            res.status(500).json({ error: `Erro ao buscar candidatos: ${erro?.message || "erro desconhecido"}` });
+        }
+    }
+
     static async remover(req, res){
         try {
             const { cd } = req.params;

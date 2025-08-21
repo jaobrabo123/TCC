@@ -1,5 +1,5 @@
 // * Prisma
-const prisma = require('@config/db.js')
+const prisma = require('../config/db.js')
 
 class CandidatoModel{
 
@@ -46,6 +46,26 @@ class CandidatoModel{
         const resultadoSemSenha = resultado.map(({senha, ...resto}) => resto)
 
         return resultadoSemSenha;
+    }
+
+    static async buscarCandidatosPublic(page){
+        const resultado = await prisma.candidatos.findMany({
+            skip: (page-1)*9,
+            take: 9,
+            select: {
+                id: true,
+                nome: true,
+                foto: true,
+                descricao: true,
+                tags: {
+                    select: {
+                        nome: true
+                    },
+                    take: 3
+                }
+            }
+        })
+        return resultado;
     }
 
     static async loginInfoPorEmail(email){
